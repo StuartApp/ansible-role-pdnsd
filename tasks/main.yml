@@ -1,0 +1,17 @@
+---
+- include_tasks: setup-Debian.yml
+  when: ansible_distribution in ['Ubuntu', 'Debian']
+
+- name: Configure pdnsd
+  template:
+    src: "pdnsd.j2"
+    dest: "{{ pdnsd_config_file }}"
+    mode: 0644
+  notify:
+    - restart pdnsd
+
+- name: Enable pdnsd service
+  service:
+    name: pdnsd
+    state: "{{ pdnsd_service_state }}"
+    enabled: "{{ pdnsd_service_enabled }}"

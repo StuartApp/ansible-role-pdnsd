@@ -1,0 +1,5 @@
+---
+- name: Install the program
+  apt:
+    name: "{{ pdnsd_package_name }}"
+    state: present
