@@ -3,3 +3,11 @@
   apt:
     name: "{{ pdnsd_package_name }}"
     state: present
+
+- name: Enable pdnsd at default.conf
+  template:
+    src: "pdnsd_default.j2"
+    dest: "/etc/default/pdnsd"
+    mode: 0644
+  notify:
+    - restart pdnsd
