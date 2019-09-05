@@ -15,4 +15,3 @@
     name: pdnsd
     state: "{{ pdnsd_service_state }}"
     enabled: "{{ pdnsd_service_enabled }}"
-
