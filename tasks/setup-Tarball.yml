@@ -31,7 +31,7 @@
   include_role:
     name: tumf.systemd-service
   vars:
-    systemd_service_Service_ExecStartPre: "test -d /var/cache/pdnsd || mkdir /var/cache/pdnsd"
+    systemd_service_Service_ExecStartPre: "/usr/bin/test -d /var/cache/pdnsd || /bin/mkdir /var/cache/pdnsd"
     systemd_service_name: "pdnsd"
     systemd_service_Service_PIDFile: /var/run/pdnsd.pid
     systemd_service_Unit_Description: "DNS server"
