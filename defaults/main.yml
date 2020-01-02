@@ -4,6 +4,7 @@ pdnsd_service_state: started
 pdnsd_service_enabled: true
 pdnsd_config_file: "/etc/pdnsd.conf"
 pdnsd_version: "1.2.9a"
+pdnsd_start_options: ""
 pdnsd_source_file: http://members.home.nl/p.a.rombouts/pdnsd/releases/pdnsd-{{pdnsd_version}}-par.tar.gz
 
 pdnsd_config: |-

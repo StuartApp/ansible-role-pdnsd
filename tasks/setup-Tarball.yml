@@ -8,7 +8,7 @@
 
 - name: Setup - Configure
   command:
-    cmd: ./configure -q
+    cmd: ./configure -q --sysconfdir=/etc
     chdir: "/opt/pdnsd-{{pdnsd_version}}"
 
 - name: Build
@@ -31,13 +31,15 @@
   include_role:
     name: tumf.systemd-service
   vars:
-    systemd_service_Service_ExecStartPre: "/usr/bin/test -d /var/cache/pdnsd || /bin/mkdir /var/cache/pdnsd"
+    systemd_service_Service_ExecStartPre: '/bin/bash -c "/usr/bin/test -d /var/cache/pdnsd || /bin/mkdir /var/cache/pdnsd"'
     systemd_service_name: "pdnsd"
     systemd_service_Service_PIDFile: /var/run/pdnsd.pid
     systemd_service_Unit_Description: "DNS server"
     systemd_service_Unit_Wants: networking.service
     systemd_service_Unit_Requires: networking.service
-    systemd_service_Service_ExecStart: "/usr/local/sbin/pdnsd --daemon -p /var/run/pdnsd.pid"
+    systemd_service_Unit_Requires: networking.service
+    systemd_service_Service_User: pdnsd
+    systemd_service_Service_ExecStart: "/usr/local/sbin/pdnsd --daemon -p /var/run/pdnsd.pid -c /etc/pdnsd.conf"
 
 - name: Enable pdnsd at default.conf
   template:
