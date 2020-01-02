@@ -3,22 +3,22 @@
   unarchive:
     remote_src: true
     src: "{{ pdnsd_source_file }}"
-    dest: /opt/pdnsd_src
-    creates: /opt/pdnsd_src/configure
+    dest: "/opt/"
+    creates: "/opt/pdnsd-{{pdnsd_version}}/configure"
 
 - name: Setup - Configure
   command:
     cmd: ./configure -q
-    chdir: /opt/pdnsd_src
+    chdir: "/opt/pdnsd-{{pdnsd_version}}"
 
 - name: Build
   make:
-    chdir: /opt/pdnsd_src
+    chdir: "/opt/pdnsd-{{pdnsd_version}}"
     target: all
 
 - name: Install
   make:
-    chdir: /opt/pdnsd_src
+    chdir: "/opt/pdnsd-{{pdnsd_version}}"
     target: install
 
 - name: Add pdnsd system user
