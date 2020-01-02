@@ -1,0 +1,48 @@
+---
+- name: Retrieve the sources
+  unarchive:
+    remote_src: true
+    src: "{{ pdnsd_source_file }}"
+    dest: /opt/pdnsd_src
+    creates: /opt/pdnsd_src/configure
+
+- name: Setup - Configure
+  command:
+    cmd: ./configure -q
+    chdir: /opt/pdnsd_src
+
+- name: Build
+  make:
+    chdir: /opt/pdnsd_src
+    target: all
+
+- name: Install
+  make:
+    chdir: /opt/pdnsd_src
+    target: install
+
+- name: Add pdnsd system user
+  user:
+    name: pdnsd
+    home: /var/cache/pdnsd
+    shell: /bin/false
+
+- name: pdnsd service
+  include_role:
+    name: tumf.systemd-service
+  vars:
+    systemd_service_Service_ExecStartPre: "test -d /var/cache/pdnsd || mkdir /var/cache/pdnsd"
+    systemd_service_name: "pdnsd"
+    systemd_service_Service_PIDFile: /var/run/pdnsd.pid
+    systemd_service_Unit_Description: "DNS server"
+    systemd_service_Unit_Wants: networking.service
+    systemd_service_Unit_Requires: networking.service
+    systemd_service_Service_ExecStart: "/usr/local/sbin/pdnsd --daemon -p /var/run/pdnsd.pid"
+
+- name: Enable pdnsd at default.conf
+  template:
+    src: "pdnsd_default.j2"
+    dest: "/etc/default/pdnsd"
+    mode: 0644
+  notify:
+    - restart pdnsd
