@@ -13,6 +13,7 @@
     src: "pdnsd.j2"
     dest: "{{ pdnsd_config_file }}"
     mode: 0644
+    owner: pdnsd
   notify:
     - restart pdnsd
 

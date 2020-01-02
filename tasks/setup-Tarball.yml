@@ -25,21 +25,23 @@
   user:
     name: pdnsd
     home: /var/cache/pdnsd
+    group: proxy
     shell: /bin/false
 
 - name: pdnsd service
   include_role:
     name: tumf.systemd-service
   vars:
-    systemd_service_Service_ExecStartPre: '/bin/bash -c "/usr/bin/test -d /var/cache/pdnsd || /bin/mkdir /var/cache/pdnsd"'
     systemd_service_name: "pdnsd"
-    systemd_service_Service_PIDFile: /var/run/pdnsd.pid
+    systemd_service_Service_PIDFile: /run/pdnsd/pdnsd.pid
     systemd_service_Unit_Description: "DNS server"
     systemd_service_Unit_Wants: networking.service
     systemd_service_Unit_Requires: networking.service
     systemd_service_Unit_Requires: networking.service
     systemd_service_Service_User: pdnsd
-    systemd_service_Service_ExecStart: "/usr/local/sbin/pdnsd --daemon -p /var/run/pdnsd.pid -c /etc/pdnsd.conf"
+    systemd_service_Service_RuntimeDirectory: pdnsd
+    systemd_service_Service_CacheDirectory: pdnsd
+    systemd_service_Service_ExecStart: "/usr/local/sbin/pdnsd --daemon -p /run/pdnsd/pdnsd.pid -c /etc/pdnsd.conf"
 
 - name: Enable pdnsd at default.conf
   template:
